@@ -3,7 +3,7 @@ package com.example.usersapi.service;
 import com.example.usersapi.dto.UserRequestDto;
 import com.example.usersapi.dto.UserResponseDto;
 import com.example.usersapi.entity.UserEntity;
-import com.example.usersapi.exception.ResourceNotFoundException;
+import com.example.usersapi.exception.EntityNotFoundException;
 import com.example.usersapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,15 +16,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserById(Long id) {
-        UserEntity userEntity = userRepository.findById(id)
-                                              .orElseThrow(() -> new ResourceNotFoundException(UserEntity.class.getSimpleName(), id));
-
-        return UserResponseDto.builder()
-                              .id(userEntity.getId())
-                              .email(userEntity.getEmail())
-                              .firstName(userEntity.getFirstName())
-                              .lastName(userEntity.getLastName())
-                              .build();
+        return userRepository.findById(id)
+                             .map(this::toUserResponseDto)
+                             .orElseThrow(() -> new EntityNotFoundException(UserEntity.class.getSimpleName(), id));
     }
 
     @Override
@@ -36,11 +30,15 @@ public class UserServiceImpl implements UserService {
 
         UserEntity savedUser = userRepository.save(user);
 
+        return toUserResponseDto(savedUser);
+    }
+
+    private UserResponseDto toUserResponseDto(UserEntity userEntity) {
         return UserResponseDto.builder()
-                              .id(savedUser.getId())
-                              .email(savedUser.getEmail())
-                              .firstName(savedUser.getFirstName())
-                              .lastName(savedUser.getLastName())
+                              .id(userEntity.getId())
+                              .email(userEntity.getEmail())
+                              .firstName(userEntity.getFirstName())
+                              .lastName(userEntity.getLastName())
                               .build();
     }
 
