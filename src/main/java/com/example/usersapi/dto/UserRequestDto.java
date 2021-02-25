@@ -7,8 +7,8 @@ import lombok.Data;
 @Builder
 public class UserRequestDto {
     
-    String firstName;
-    String lastName;
-    String email;
+    private String firstName;
+    private String lastName;
+    private String email;
     
 }
