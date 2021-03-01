@@ -1,10 +1,11 @@
 package com.example.usersapi.dto;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Data
-@RequiredArgsConstructor
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponseDto {
     
     private Long id;
